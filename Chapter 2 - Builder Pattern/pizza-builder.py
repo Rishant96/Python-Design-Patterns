@@ -83,4 +83,36 @@ class CreamyBaconBuilder:
         print('done with the topping (mozzarella, bacon, ham, \
             mushrooms, red onion, oregano)')
 
+    def bake( self ):
+        self.progress = PizzaProgress.baking
+        print(f'baking your creamy bacon pizza for \
+            {self.baking_time} seconds')
+        time.sleep(self.baking_time)
+        self.progress = PizzaProgress.ready
+        print('your creamy bacon pizza is ready!')
 
+
+class Waiter:
+    def __init__( self ):
+        self.builder = None
+
+    def construct_pizza( self, builder ):
+        self.builder = builder
+        [step() for step in (builder.prepare_dough, builder.add_sauce,
+            builder.add_toppings, builder.bake)]
+
+    @property
+    def pizza( self ):
+        return self.builder.pizza
+
+
+def validate_style( builders ):
+    try:
+        pizza_style = input('What pizza would you like, \
+            [m]argherita or [c]reamy bacon? ')
+        builder = builders[pizza_style]()
+    except KeyError as err:
+        print('Sorry, only margherita (key m) and creamy bacon \
+            (key c) are available') 
+        return False, None
+    return True, builder
